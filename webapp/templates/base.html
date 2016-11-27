@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!--suppress BadExpressionStatementJS -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Analysis</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.2.3/css/bulma.min.css"/>
+    <style>
+        .top-button {
+            position: fixed;
+            top: 5px;
+            z-index: 1000;
+            left: calc(50% - 60px);
+            transition: all 300ms;
+        }
+
+        .top-button.hidden {
+            top: -100px;
+        }
+    </style>
+</head>
+<body>
+<header class="nav has-shadow">
+    <div class="container">
+        <div class="nav-left">
+            <a class="nav-item" href="/">
+                <strong>HackHate</strong>
+                <!--<img src="images/bulma-type-white.png" alt="Logo">-->
+            </a>
+        </div>
+        <span class="nav-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+        <div class="nav-right nav-menu">
+            <a class="nav-item is-active">
+                Home
+            </a>
+            <a class="nav-item" href="/docs" target="_blank">
+                API
+            </a>
+        </div>
+    </div>
+</header>
+{% block body %}{% endblock %}
+
+<footer class="footer">
+    <div class="container">
+        <div class="content has-text-centered">
+            <p>
+                <strong>Hack Hate</strong> - by Team Baguette
+            </p>
+            <p>
+                <a class="button is-info" href="https://github.com/remybd/junctionHate" target="_blank">
+                      <span class="icon">
+                        <i class="fa fa-github"></i>
+                      </span>
+                    <span>Source Code</span>
+                </a>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+{% block script %}{% endblock %}
+
+</body>
+</html>

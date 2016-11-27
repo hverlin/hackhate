@@ -1,0 +1,80 @@
+{% block body %}
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                {% if poli_name %}
+                    {% if poli_image %}
+                        <div class="column">
+                            <img src="{{ poli_image }}"
+                                 style="display: block;margin-left: auto;  margin-right: auto;">
+                            <div style="margin-top: 20px"></div>
+                        </div>
+                    {% endif %}
+                    <div class="column">
+                        <div class="has-text-centered">
+                            <h1 class="title ">
+                                {{ poli_name }}
+                            </h1>
+                            {% if poli_birthdate %}
+                                <p>Birthdate : {{ poli_birthdate }}</p>
+                            {% endif %}
+
+                            {% if poli_official_website %}
+                                <p>Official website : <a
+                                        href="{{ poli_official_website }}">{{ poli_official_website }} </a>
+                                </p>
+                            {% endif %}
+                        </div>
+                        {% if poli_political_parties %}
+                            <hr>
+                            <div>
+                                <h3 class="title is-5 has-text-centered">Political Parties</h3>
+
+                                <div class="box">
+                                    <ul>
+                                        {% for party in poli_political_parties %}
+                                            <li class="sentiment" style="display: inline; padding : 0 0.5em">
+                                                {% if party.end %}
+                                                    <p>{{ party.name }} from {{ party.start }} to {{ party.end }}</p>
+                                                {% else %}
+                                                    <p>{{ party.name }}
+                                                        {% if party.start %} since
+                                                            {{ party.start }}
+                                                        {% endif %}
+                                                    </p>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if poli_awards %}
+                            <div class="column">
+                                <h3 class="title is-5 has-text-centered">Awards</h3>
+
+                                <div class="box">
+                                    <ul style="list-style: none">
+                                        {% for award in poli_awards %}
+                                            <li class="sentiment" style="display: inline; padding : 0 0.5em">
+                                                <p>{{ award.name }} the {{ award.date }}</p>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                {% else %}
+                    <h1 class="title has-text-centered">
+                        Sorry, politician not found
+                    </h1>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

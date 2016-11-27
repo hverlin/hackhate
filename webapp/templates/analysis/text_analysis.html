@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block body %}
+    <section class="section">
+        <div class="container">
+            <h1 class="title has-text-centered">
+                Text Analysis
+            </h1>
+
+            <div class="columns">
+                <div class="column is-half">
+                    <h2 class="title is-5 has-text-centered">Sentiment Analysis</h2>
+
+                    <canvas id="myChart" width="100%" height="80px"></canvas>
+
+
+                    {% if bad_words %}
+                        <hr style="margin: 10px 0">
+
+                        <h2 class="title is-5">Hate words:</h2>
+                        <table class="table is-striped">
+                            <tr>
+                                <th>Word</th>
+                                <th>Meaning</th>
+                                <th>Offensiveness</th>
+                            </tr>
+
+                            {% for word in bad_words %}
+                                <tr>
+                                    <td>
+                                        <a href="https://www.hatebase.org/vocabulary/{{ word.word }}" target="_blank">
+                                            {{ word.word }}
+                                        </a>
+                                    </td>
+                                    <td>{{ word.meaning }}</td>
+                                    <td>{{ word.offensiveness|floatformat:2|intcomma }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% endif %}
+
+                    <hr style="margin: 10px 0">
+
+                    <h2 class="title is-5">Credibility</h2>
+                    <div class="box" style="margin-top: 20px;">
+                        <article class="media">
+                            <nav class="level">
+                                <div class="level-left">
+                                    <ul style="list-style: none">
+                                        <li class="sentiment" style="display: inline; padding : 0 0.5em">
+                                            <strong style="color: orange">Clickbait</strong>: {{ credibility.CLICKBAIT }}
+                                        </li>
+                                        <li style="display: inline; padding : 0 0.5em">
+                                            <strong style="color: blue">Hoax</strong>: {{ credibility.HOAX }}
+                                        </li>
+                                        <li style="display: inline; padding : 0 0.5em">
+                                            <strong style="color: red">Satire</strong>: {{ credibility.SATIRE }}
+                                        </li>
+                                        <li style="display: inline; padding : 0 0.5em">
+                                            <strong style="color: green">Serious</strong>: {{ credibility.SERIOUS }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>
+                        </article>
+                        <div style="overflow: hidden; white-space: nowrap;  text-overflow: ellipsis;">
+                            <a href="{{ duckduck_url }}">
+                                {{ duckduck_url }}
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="column is-half">
+                    <h2 class="title is-5 has-text-centered">Text</h2>
+                    <p style="text-align: justify; max-width: 800px"> {{ text }}</p>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+
+{% block script %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+    <script>
+        //noinspection UnterminatedStatementJS
+        document.addEventListener("DOMContentLoaded", function (event) {
+            var data = JSON.parse("{{analysis}}");
+
+            var keys_analysis = JSON.parse("{{keys_analysis}}".replace(/'/g, '"'));
+
+            var ctx = document.getElementById("myChart");
+            var myChart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: keys_analysis,
+                    datasets: [{
+                        label: 'value',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                min: -1,
+                                max: 1
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+
+    </script>
+{% endblock %}

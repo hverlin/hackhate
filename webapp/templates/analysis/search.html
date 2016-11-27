@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <section class="section">
+        <div class="container">
+            <h1 class="title is-2 has-text-centered">
+                Search Page
+            </h1>
+
+            <div class="columns ">
+                <div class="column is-three-quarters">
+                    <input autofocus="autofocus" class="input" placeholder="Search query" type="text" id="query"/>
+                </div>
+                <div class="column">
+                    <button class="button is-primary" id="submit">Analyze Text</button>
+                    <button class="button is-primary" id="submitSocial">Analyze Social</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <section class="section">
+        <h2 class="title is-4 has-text-centered"> Most searched </h2>
+        <div class="container">
+            <div class="columns is-multiline">
+                {% for search in searchs %}
+                    <div class="column is-one-third">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <figure class="image is-64x64">
+                                            <img src="{{ search.picture_url }}" alt="Image">
+                                        </figure>
+                                    </div>
+                                    <div class="media-content">
+                                        <p class="title is-5">{{ search.search }}</p>
+                                        <a class="subtitle is-6" href="/social_analysis?text={{ search.search }}">
+                                            Search
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block script %}
+    <script>
+        var BASE_URL = "{{ API_URL }}";
+
+        document.getElementById("submit").onclick = function (event) {
+            query = document.getElementById("query").value;
+            window.location = BASE_URL + "analysis?text=" + query;
+        };
+
+        document.getElementById("submitSocial").onclick = function (event) {
+            query = document.getElementById("query").value;
+            window.location = BASE_URL + "social_analysis?text=" + query;
+        };
+    </script>
+{% endblock %}

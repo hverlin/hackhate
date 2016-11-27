@@ -1,0 +1,13 @@
+
+.hack-bar-button {
+    text-align: center;
+    z-index: 1000000;
+    background-color: white;
+    color: black;
+    position: fixed;
+    width: 120px;
+    padding: 5px;
+    left: calc(50% - 60px);
+    transition: all 300ms;
+    cursor: pointer;
+}

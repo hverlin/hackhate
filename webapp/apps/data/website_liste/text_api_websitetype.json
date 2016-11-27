@@ -1,0 +1,1 @@
+[{"model": "text_api.websitetype", "pk": 1, "fields": {"name": "HOAX"}}, {"model": "text_api.websitetype", "pk": 2, "fields": {"name": "SATIRE"}}, {"model": "text_api.websitetype", "pk": 3, "fields": {"name": "CLICKBAIT"}}, {"model": "text_api.websitetype", "pk": 4, "fields": {"name": "SERIOUS"}}]

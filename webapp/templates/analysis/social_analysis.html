@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+    <div id="poltical-info">
+        <button class="button top-button is-success hidden" id="show-information" onclick="showInformation()">
+            Show more information
+        </button>
+    </div>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="title has-text-centered">
+                Social Analysis
+            </h1>
+
+            <div class="columns">
+                <div class="column">
+                    <canvas id="myChart" width="100%" height="40px"></canvas>
+                </div>
+                {% if facebook %}
+                    <div class="column">
+                        <img src="{{ f_page.cover.source }}"
+                             style="display: block;margin-left: auto;  margin-right: auto;">
+                        <div style="margin-top: 20px"></div>
+                    </div>
+                {% endif %}
+            </div>
+
+
+            <div class="columns">
+                {% if twitter %}
+
+                    <div class="column">
+                        <h2 class="title is-5 has-text-centered">Twitter: {{ t_user.screen_name }}</h2>
+
+                        <div style="margin-top: 20px"></div>
+
+                        {% for tweet in twitter.tweets %}
+                            {% autoescape on %}
+                                <div class="box" id="tweetBox{{ forloop.counter0 }}"
+                                     onclick='addCredibility(this, "{{ tweet.message|escapejs }}")'>
+                            {% endautoescape %}
+                        <article class="media">
+                            <div class="media-left">
+                                <figure class="image is-64x64">
+                                    <img src="{{ t_user.profile_image_url }}" alt="Image">
+                                </figure>
+                            </div>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <strong>{{ t_user.screen_name }}</strong>
+                                        <br>
+                                        {{ tweet.message }}
+                                    </p>
+                                </div>
+                                <nav class="level">
+                                    <div class="level-left">
+                                        <ul style="list-style: none">
+                                            <li style="display: inline; padding : 0 0.5em">
+                                                <strong style="color: red">Compound</strong>: {{ tweet.scores.compound }}
+                                            </li>
+                                            <li class="sentiment" style="display: inline; padding : 0 0.5em">
+                                                <strong>Neutral</strong>: {{ tweet.scores.neu }}
+                                            </li>
+
+                                            <li style="display: inline; padding : 0 0.5em">
+                                                <strong>Negative</strong>: {{ tweet.scores.negative }}
+                                            </li>
+                                            <li style="display: inline; padding : 0 0.5em">
+                                                <strong style="color: navy">Positive</strong>: {{ tweet.scores.pos }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </nav>
+                                <nav>
+                                    <hr>
+
+                                    <ul style="list-style: none;" id="credibility-list">
+                                    </ul>
+                                </nav>
+                                <nav id="url-nav">
+                                </nav>
+                            </div>
+                        </article>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                {% endif %}
+
+                {% if facebook %}
+                    <div class="column">
+                        <h2 class="title is-5 has-text-centered">Facebook: {{ f_page.name }} </h2>
+                        {% for post in facebook.posts %}
+                            {% autoescape on %}
+                                <div class="box" id="facebookBox{{ forloop.counter0 }}"
+                                     onclick="addCredibility(this, '{{ post.message|escapejs }}')">
+                            {% endautoescape %}
+                        <article class="media">
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <strong>{{ f_page.username }}</strong>
+                                        <br>
+                                        {{ post.message }}
+                                    </p>
+                                </div>
+                                <nav class="level">
+                                    <div class="level-left">
+                                        <ul style="list-style: none">
+                                            <li style="display: inline; padding : 0 0.5em">
+                                                <strong style="color: red">Compound</strong>: {{ post.scores.compound }}
+                                            </li>
+                                            <li class="sentiment" style="display: inline; padding : 0 0.5em">
+                                                <strong>Neutral</strong>: {{ post.scores.neu }}
+                                            </li>
+                                            <li style="display: inline; padding : 0 0.5em">
+                                                <strong>Negative</strong>: {{ post.scores.negative }}
+                                            </li>
+                                            <li style="display: inline; padding : 0 0.5em">
+                                                <strong>Positive</strong>: {{ post.scores.pos }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </nav>
+
+                                <nav>
+                                    <hr>
+                                    <ul style="list-style: none;" id="credibility-list">
+                                    </ul>
+                                </nav>
+                                <nav id="url-nav">
+                                </nav>
+                            </div>
+                        </article>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+
+{% block script %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+    <script>
+        //noinspection UnterminatedStatementJS
+        document.addEventListener("DOMContentLoaded", function (event) {
+            var data = JSON.parse("{{stats.scores}}");
+
+            var keys_analysis = ["min", "mean", "max"];
+
+            var ctx = document.getElementById("myChart");
+            var myChart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: keys_analysis,
+                    datasets: [{
+                        label: 'Compound value',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                min: -1,
+                                max: 1
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+
+        function addCredibility(elem, message) {
+            $(elem).find("#credibility-list").append("<li style=none' />");
+            if ($(elem).find("#credibility-list").find("li").length <= 1) {
+                $.get("api/search_score?search=" + message, function (data) {
+                    for (cred in data.scores) {
+                        $(elem).find("#credibility-list").append("<li style='display: inline; padding : 0 0.5em'>" + cred + ": " + data.scores[cred] + "</li>");
+                    }
+                    $(elem).find("#url-nav").append('<a style="padding: 0 0.5em" href="' + data.search_link + '">See Research</a>');
+                });
+            } else {
+            }
+        }
+
+        var politcal_data = null;
+        {% if t_user and f_page%}
+            $.get("/political_description?id={{ t_user.screen_name }}&id_type=twitter", function (data, status) {
+                if (status == "success") {
+                    $("#show-information").removeClass("hidden");
+                    politcal_data = data;
+                } else {
+                    $.get("/political_description?id={{ f_page.name }}&id_type=facebook", function (data, st) {
+                        if (status == "success") {
+                            $("#show-information").removeClass("hidden");
+                            politcal_data = data;
+                        }
+                    });
+                }
+            });
+        {% elif t_user %}
+            $.get("/political_description?id={{ t_user.screen_name }}&id_type=twitter", function (data) {
+                if (status == "success") {
+                    $("#show-information").removeClass("hidden");
+                    politcal_data = data;
+                }
+            });
+        {% elif f_page %}
+            $.get("/political_description?id={{ f_page.name }}&id_type=facebook", function (data) {
+                if (status == "success") {
+                    $("#show-information").removeClass("hidden");
+                    politcal_data = data;
+                }
+            });
+        {% endif %}
+
+
+        pi = $('#poltical-info');
+
+        function showInformation() {
+            $("html, body").animate({scrollTop: 0}, "slow");
+
+            pi.html(politcal_data).hide();
+            pi.show('slow');
+        }
+
+    </script>
+{% endblock %}
