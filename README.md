@@ -1,4 +1,5 @@
 # Junction 2016 Project on Hatespeech
+(Hacktathon Helsinki - 25-27 nov. 2016)
 
 [https://devpost.com/software/hackhate](https://devpost.com/software/hackhate)
 
@@ -48,4 +49,4 @@ Built With
 python, django, twitter, facebook-graph, machine-learning, nltk, sparql, wikidata, chrome
 
 ### Try it out
-[hackhate.huguesverlin.fr](hackhate.huguesverlin.fr)
+[http://hackhate.huguesverlin.fr](http://hackhate.huguesverlin.fr)
